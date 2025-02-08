@@ -1,7 +1,4 @@
-# app_chat
-build on node js
 #server
-NODEJS
 /app
 ├── config/
 │   ├── db.conf.js
@@ -59,6 +56,3 @@ NODEJS
 /server.js
 /package.json
 /.env
-yarn-package-manage
-#client
-#socket

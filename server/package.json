@@ -1,0 +1,15 @@
+{
+    "name": "app_chat",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "yarn node --env-file .env index.js"
+    },
+    "repository": "https://github.com/khoaab112/app_chat.git",
+    "author": "khoaab112 <khoaqwe1122@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.21.2"
+    }
+}
