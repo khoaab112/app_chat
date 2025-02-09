@@ -56,3 +56,10 @@
 /server.js
 /package.json
 /.env
+
+# clear cache
+yarn cache clean
+
+
+
+
