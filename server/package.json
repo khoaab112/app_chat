@@ -4,14 +4,17 @@
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
-        "dev": "yarn node --env-file .env index.js"
+        "dev": "yarn nodemon  --env-file .env index.js"
     },
     "repository": "https://github.com/khoaab112/app_chat.git",
     "author": "khoaab112 <khoaqwe1122@gmail.com>",
     "license": "MIT",
     "dependencies": {
+        "cors": "^2.8.5",
         "express": "^4.21.2",
-        "migrate-mongo": "^12.1.3"
+        "helmet": "^8.0.0",
+        "mongoose": "^8.10.0",
+        "nodemon": "^3.1.9"
     },
     "devDependencies": {}
 }
