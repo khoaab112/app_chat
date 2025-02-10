@@ -1,7 +1,8 @@
+const express = require('express');
+const app = express();
+
 const auth = require('./auth')
 
-const index = (app) => {
-    console.log(11);
-    auth(app);
-}
-module.exports = index;
+app.use('/api/auth', auth);
+
+module.exports = app;
