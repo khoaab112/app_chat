@@ -14,11 +14,10 @@ const userSchema = new mongoose.Schema({
     },
     avartar: {
         type: String,
-
     },
     email: {
         type: String,
-        required: [true, 'required'],
+        required: [true, 'Please enter a valid mail!'],
         unique: [true, 'Email already exists'],
         validate: {
             validator: function(v) {
@@ -29,7 +28,6 @@ const userSchema = new mongoose.Schema({
     },
     phone_number: {
         type: Number,
-        required: [true, 'required'],
         unique: [true, 'Phone number already exists'],
     },
     age: { type: Number, default: 1 },
