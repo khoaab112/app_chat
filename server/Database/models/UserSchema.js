@@ -31,8 +31,6 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'required'],
         unique: [true, 'Phone number already exists'],
-        max: [12, '12 digit request'],
-        min: [12, '12 digit request'],
     },
     age: { type: Number, default: 1 },
     is_active: {

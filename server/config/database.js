@@ -1,9 +1,9 @@
-const { DB_HOST, DB_NAME } = process.env;
+const { DB_HOST } = process.env;
 const mongoose = require('mongoose');
 
 const connectDB = async() => {
     try {
-        await mongoose.connect(`${DB_HOST}/${DB_NAME}`, {});
+        await mongoose.connect(`${DB_HOST}`, {});
         console.log('MongoDB Connected!');
     } catch (error) {
         console.error('Connection error:', error);
