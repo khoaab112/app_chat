@@ -1,4 +1,5 @@
 #server
+```bash
 /app
 ├── config/
 │   ├── db.conf.js
@@ -56,9 +57,39 @@
 /server.js
 /package.json
 /.env
+```
 
 # clear cache
-yarn cache clean
+```javascript
+    yarn cache clean
+```
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/khoaab112/app_chat.git
+```
+
+Go to the project directory
+
+```bash
+  cd app_chat/server
+```
+
+Install dependencies
+
+```bash
+  yarn install
+```
+config environment
+
+Start the server
+
+```bash
+  yarn dev
+```
+
 
 
 
