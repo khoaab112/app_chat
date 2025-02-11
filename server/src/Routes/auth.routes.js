@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const { register } = require('../Controller/AuthController')
 
-router.get('/users', (req, res) => {
-    res.json({ message: 'Danh sách users' });
-});
+
+router.post('/register', register);
 
 router.get('/products', (req, res) => {
     res.json({ message: 'Danh sách products' });

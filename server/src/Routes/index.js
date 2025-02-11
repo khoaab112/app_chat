@@ -1,8 +1,15 @@
+'use strict';
 const express = require('express');
-const app = express();
+const fs = require('fs');
+const path = require('path');
 
-const auth = require('./auth')
+const router = express.Router();
+fs.readdirSync(__dirname).forEach((file) => {
+    if (file !== 'index.js') {
+        const route = require(path.join(__dirname, file));
+        const routeName = file.replace('.routes.js', '');
+        router.use(`/api/${routeName}`, route);
+    }
+});
 
-app.use('/api/auth', auth);
-
-module.exports = app;
+module.exports = router;

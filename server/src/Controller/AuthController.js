@@ -1,5 +1,6 @@
-const register = async() => {
-
+const authRepository = require('../Repository/authRepository')
+const register = async(req, res) => {
+    return authRepository.createUser(req.body, res);
 };
 const login = async() => {};
 const logout = async() => {};
