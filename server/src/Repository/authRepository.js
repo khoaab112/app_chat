@@ -25,7 +25,7 @@ class UserRepository {
         const { email, password } = data;
         let user = await User.findOne({ email }).exec();
         if (!user) return responseHelper(res, 403, "Invalid information !");
-
+        if (!user.is_active) return responseHelper(res, 403, "Account disabled !");
         const isPasswordValid = await argon2.verify(user.password, password);
         if (!isPasswordValid) return responseHelper(res, 403, "Invalid information!");
 
@@ -48,9 +48,28 @@ class UserRepository {
         await User.findOneAndUpdate({ email }, { refresh_token: tokens.refresh_token });
         return responseHelper(res, 200, tokens);
     };
-    async refreshAccessToken(userID) {
+    async refreshAccessToken(userID, refreshToken, reissue) {
         let user = await User.findById(userID).exec();
-        console.log(user);
+        if (user.refresh_token === refreshToken) {
+            let payload = {
+                id: user.id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                phone_number: user.phone_number
+            };
+            let accessToken = jwt.sign(payload,
+                JWT_SECRET_ACCECSS, { algorithm: ALGORITHM_JWT, expiresIn: EXPIRES_ACCECSS_TOKEN }
+            );
+            if (reissue) {
+                let refresh_token = jwt.sign({ id: user.id, email: user.email },
+                    JWT_SECRET_REFRESH, { algorithm: ALGORITHM_JWT, expiresIn: EXPIRES_REFRESH_TOKEN }
+                )
+                res.cookie(T_COOKIE, refresh_token, { httpOnly: true, maxAge: 12 * 60 * 60 * 1000 });
+            }
+            return accessToken;
+        }
+        return null;
     }
 }
 

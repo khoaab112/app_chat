@@ -9,11 +9,12 @@ const codehttp = {
     503: "Service Unavailable"
 };
 
-const responseHelper = (res, code, data = null) => {
+const responseHelper = (res, code, data, custome = null) => {
     return res.status(code).json({
         status: code,
         message: codehttp[code] || "Unknown status",
-        data: data || null
+        data: data || null,
+        ...(custome && typeof custome === "object" ? custome : {})
     });
 };
 
