@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { register } = require('../Controller/AuthController')
+const { register, login } = require('../Controller/AuthController');
+const { validateRegister, validateLogin } = require('../Middleware/userMiddleware')
 
 
-router.post('/register', register);
+router.post('/register', validateRegister, register);
 
-router.get('/products', (req, res) => {
-    res.json({ message: 'Danh sách products' });
-});
+router.post('/login', validateLogin, login);
 
 module.exports = router;
