@@ -1,4 +1,6 @@
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET_ACCECSS, JWT_SECRET_REFRESH, ALGORITHM_JWT, EXPIRES_ACCECSS_TOKEN, EXPIRES_REFRESH_TOKEN } = process.env;
 const User = require('../../Database/models/UserSchema');
 const responseHelper = require('../Helpers/reponseHelper');
 
@@ -23,15 +25,27 @@ class UserRepository {
         const { email, password } = data;
         let user = await User.findOne({ email }).exec();
         if (!user) return responseHelper(res, 403, "Invalid information !");
-        try {
-            if (await argon2.verify(user.password, password)) {
-                // true
-            } else {
-                return responseHelper(res, 403, "Invalid information !");
-            }
-        } catch (err) {
-            return responseHelper(res, 500, err)
-        }
+
+        const isPasswordValid = await argon2.verify(user.password, password);
+        if (!isPasswordValid) return responseHelper(res, 403, "Invalid information!");
+
+        const generateTokens = (user) => ({
+            access_token: jwt.sign({
+                    id: user.id,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    phone_number: user.phone_number
+                },
+                JWT_SECRET_ACCECSS, { algorithm: ALGORITHM_JWT, expiresIn: EXPIRES_ACCECSS_TOKEN }
+            ),
+            refresh_token: jwt.sign({ id: user.id, email: user.email },
+                JWT_SECRET_REFRESH, { algorithm: ALGORITHM_JWT, expiresIn: EXPIRES_REFRESH_TOKEN }
+            )
+        });
+        const tokens = generateTokens(user);
+        await User.findOneAndUpdate({ email }, { refresh_token: tokens.refresh_token });
+        return responseHelper(res, 200, tokens);
     };
 }
 
