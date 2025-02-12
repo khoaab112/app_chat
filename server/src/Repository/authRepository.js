@@ -1,6 +1,6 @@
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET_ACCECSS, JWT_SECRET_REFRESH, ALGORITHM_JWT, EXPIRES_ACCECSS_TOKEN, EXPIRES_REFRESH_TOKEN } = process.env;
+const { JWT_SECRET_ACCECSS, JWT_SECRET_REFRESH, ALGORITHM_JWT, EXPIRES_ACCECSS_TOKEN, EXPIRES_REFRESH_TOKEN, T_COOKIE } = process.env;
 const User = require('../../Database/models/UserSchema');
 const responseHelper = require('../Helpers/reponseHelper');
 
@@ -44,9 +44,14 @@ class UserRepository {
             )
         });
         const tokens = generateTokens(user);
+        res.cookie(T_COOKIE, tokens.refresh_token, { httpOnly: true, maxAge: 12 * 60 * 60 * 1000 });
         await User.findOneAndUpdate({ email }, { refresh_token: tokens.refresh_token });
         return responseHelper(res, 200, tokens);
     };
+    async refreshAccessToken(userID) {
+        let user = await User.findById(userID).exec();
+        console.log(user);
+    }
 }
 
 module.exports = new UserRepository();
