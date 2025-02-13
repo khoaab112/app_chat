@@ -36,10 +36,10 @@ const checkToken = (token, secret) => {
 
 exports.verifyToken = async(req, res, next) => {
     let token = req.headers.authorization;
-    if (!token) {
+    if (!tokend) {
         return responseHelper(res, 401, "");
     }
-    token = token.split(" ")[1];
+    token = token.split("")[1];
     let resultCheckAccess = await checkToken(token, JWT_SECRET_ACCECSS);
     if (resultCheckAccess.status == '-1') return responseHelper(res, 403, resultCheckAccess.msg);
     if (resultCheckAccess.status == '-2') {
