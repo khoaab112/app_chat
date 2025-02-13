@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const responseHelper = require('../Helpers/reponseHelper');
 const authRepository = require('../Repository/authRepository')
 
-const { JWT_SECRET_ACCECSS, T_COOKIE, JWT_SECRET_REFRESH, ALGORITHM_JWT, EXPIRES_ACCECSS_TOKEN, EXPIRES_REFRESH_TOKEN } = process.env;
+const { key_cookie_refresh_token } = require('../../config/globalVar')
+const { JWT_SECRET_ACCECSS, JWT_SECRET_REFRESH } = process.env;
 
 const checkToken = (token, secret) => {
     return new Promise((resolve) => {
@@ -42,13 +43,14 @@ exports.verifyToken = async(req, res, next) => {
     let resultCheckAccess = await checkToken(token, JWT_SECRET_ACCECSS);
     if (resultCheckAccess.status == '-1') return responseHelper(res, 403, resultCheckAccess.msg);
     if (resultCheckAccess.status == '-2') {
-        let refreshToken = req.cookies[T_COOKIE];
+        let refreshToken = req.cookies[key_cookie_refresh_token];
         let resultCheckRefresh = await checkToken(refreshToken, JWT_SECRET_REFRESH);
         if (resultCheckRefresh.status !== '01') return responseHelper(res, 403, resultCheckRefresh.msg);
         let result = await authRepository.refreshAccessToken(resultCheckRefresh.msg.id, refreshToken, resultCheckRefresh.reissue);
-        if (!result) return responseHelper(res, 403, resultCheckRefresh.msg);
+        if (!result) return responseHelper(res, 403, result);
         return responseHelper(res, 401, "reissue token", { access_token: result });
     }
     req.user = resultCheckAccess.msg;
+    req.token = token;
     return next();
 };

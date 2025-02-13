@@ -1,6 +1,22 @@
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET_ACCECSS, JWT_SECRET_REFRESH, ALGORITHM_JWT, EXPIRES_ACCECSS_TOKEN, EXPIRES_REFRESH_TOKEN, T_COOKIE } = process.env;
+const { setRedisForType } = require('./../Helpers/redisHelper');
+
+const {
+    blacklist_token,
+    expires_access_token_second,
+    expores_cookie_token,
+    key_cookie_refresh_token,
+    EXPIRES_ACCECSS_TOKEN,
+    EXPIRES_REFRESH_TOKEN,
+} = require('./../../config/globalVar');
+
+const {
+    JWT_SECRET_ACCECSS,
+    JWT_SECRET_REFRESH,
+    ALGORITHM_JWT,
+} = process.env;
+
 const User = require('../../Database/models/UserSchema');
 const responseHelper = require('../Helpers/reponseHelper');
 
@@ -44,7 +60,7 @@ class UserRepository {
             )
         });
         const tokens = generateTokens(user);
-        res.cookie(T_COOKIE, tokens.refresh_token, { httpOnly: true, maxAge: 12 * 60 * 60 * 1000 });
+        res.cookie(key_cookie_refresh_token, tokens.refresh_token, { httpOnly: true, maxAge: expores_cookie_token });
         await User.findOneAndUpdate({ email }, { refresh_token: tokens.refresh_token });
         return responseHelper(res, 200, tokens);
     };
@@ -65,7 +81,7 @@ class UserRepository {
                 let refresh_token = jwt.sign({ id: user.id, email: user.email },
                     JWT_SECRET_REFRESH, { algorithm: ALGORITHM_JWT, expiresIn: EXPIRES_REFRESH_TOKEN }
                 )
-                res.cookie(T_COOKIE, refresh_token, { httpOnly: true, maxAge: 12 * 60 * 60 * 1000 });
+                res.cookie(key_cookie_refresh_token, refresh_token, { httpOnly: true, maxAge: expores_cookie_token });
             }
             return accessToken;
         }
@@ -76,6 +92,8 @@ class UserRepository {
         if (!user) return responseHelper(res, 404, "");
         let removeToken = await User.findOneAndUpdate({ _id: user.id }, { refresh_token: "" });
         if (!removeToken) return responseHelper(res, 403, "");
+        console.log(expires_access_token_second)
+        await setRedisForType(blacklist_token + user.id, req.token, 'string', expires_access_token_second);
         return responseHelper(res, 200, "Logout completed !");
     }
 
