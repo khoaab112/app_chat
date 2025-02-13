@@ -6,6 +6,7 @@ const configVar = {
     version: "1.0.0",
     EXPIRES_ACCECSS_TOKEN: '1h',
     EXPIRES_REFRESH_TOKEN: '6h',
+    FILE_HTML_AUTHENTICATION_CODE: 'authentication_code.html'
 };
 
 module.exports = configVar;

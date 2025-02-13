@@ -15,28 +15,50 @@ const {
     JWT_SECRET_ACCECSS,
     JWT_SECRET_REFRESH,
     ALGORITHM_JWT,
+    JWT_SECRET_MAIL,
 } = process.env;
 
 const User = require('../../Database/models/UserSchema');
+const UserPendingSchema = require('../../Database/models/UserPendingSchema');
 const responseHelper = require('../Helpers/reponseHelper');
+const { mailConfirm } = require('../Helpers/sendMail')
 
 class UserRepository {
     async createUser(data, res) {
+        let email = data.email;
         const { password } = data;
-        let hash;
-        try {
-            hash = await argon2.hash(password);
-        } catch (err) {
-            return responseHelper(res, 500, err)
-        }
+        let checkUser = await User.findOne({ email }).exec();
+        if (checkUser) return responseHelper(res, 400, "email already exists!")
+        let hash = await argon2.hash(password);
+        let token = jwt.sign({ email: data.email },
+            JWT_SECRET_MAIL, { algorithm: ALGORITHM_JWT, expiresIn: EXPIRES_REFRESH_TOKEN }
+        );
         data.password = hash;
-        await User.create(data).then(result => {
-                return responseHelper(res, 200, "success")
+        data.token = token;
+        await UserPendingSchema.create(data).then(async result => {
+                console.log(await mailConfirm(data));
+                return responseHelper(res, 200, "success ! check email")
             })
             .catch(err => {
                 return responseHelper(res, 400, err.message)
             });
     };
+    // async createUser(data, res) {
+    //     const { password } = data;
+    //     let hash;
+    //     try {
+    //         hash = await argon2.hash(password);
+    //     } catch (err) {
+    //         return responseHelper(res, 500, err)
+    //     }
+    //     data.password = hash;
+    //     await User.create(data).then(result => {
+    //             return responseHelper(res, 200, "success")
+    //         })
+    //         .catch(err => {
+    //             return responseHelper(res, 400, err.message)
+    //         });
+    // };
     async login(data, res) {
         const { email, password } = data;
         let user = await User.findOne({ email }).exec();

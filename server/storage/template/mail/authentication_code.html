@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .email-container {
+            max-width: 450px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: start;
+        }
+        
+        .btn-confirm {
+            text-align: center;
+            color: #ffffff;
+        }
+        
+        .btn-confirm a {
+            color: #ffffff;
+        }
+        
+        .logo {
+            width: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .message {
+            font-size: 14px;
+            color: #666;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #007bff;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        
+        .button:hover {
+            background-color: #0056b3;
+        }
+        
+        .footer {
+            font-size: 12px;
+            color: #888;
+            margin-top: 20px;
+        }
+        
+        .footer a {
+            color: rgb(180, 190, 204);
+            ;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <!-- <img class="logo" src="../../image/logo.png" alt="Logo"> -->
+        <img class="logo" src="https://i.pinimg.com/474x/44/e6/3a/44e63ad5e9e374a9fdffaeb6bd661192.jpg" alt="Logo">
+        <div class="title">Xác nhận email</div>
+        <p class="message">
+            <stong>Chúng tôi vừa nhận được một yêu cầu tạo tài khoản, hãy xác nhận mail để sử dụng dịch vụ.</stong>
+            <p>Họ : {{last_name}}</p>
+            <p>Tên : {{first_name }}</p>
+            <p>Email : {{email}}</p>
+            {{path_confirm}}
+        </p>
+        <p>Mail này có hiệu lực trong 3 tiếng bắt đầu từ thời điểm bạn nhận mail.</p>
+        <div class="btn-confirm">
+            <a href="{{{path_confirm}}}" class="button">Xác nhận</a>
+        </div>
+        <hr>
+        <div class="footer">
+            <strong>{{APP_NAME}}</strong> - <a href="{{path_block}}">Không muốn nhận mail ?</a>
+        </div>
+    </div>
+</body>
+
+</html>
