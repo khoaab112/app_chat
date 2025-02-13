@@ -24,7 +24,7 @@ const responseHelper = require('../Helpers/reponseHelper');
 const { mailConfirm } = require('../Helpers/sendMail')
 
 class UserRepository {
-    async createUser(data, res) {
+    async register(data, res) {
         let email = data.email;
         const { password } = data;
         let checkUser = await User.findOne({ email }).exec();
@@ -43,22 +43,22 @@ class UserRepository {
                 return responseHelper(res, 400, err.message)
             });
     };
-    // async createUser(data, res) {
-    //     const { password } = data;
-    //     let hash;
-    //     try {
-    //         hash = await argon2.hash(password);
-    //     } catch (err) {
-    //         return responseHelper(res, 500, err)
-    //     }
-    //     data.password = hash;
-    //     await User.create(data).then(result => {
-    //             return responseHelper(res, 200, "success")
-    //         })
-    //         .catch(err => {
-    //             return responseHelper(res, 400, err.message)
-    //         });
-    // };
+    async createUser(data, res) {
+        const token = data.token;
+        let user = await UserPendingSchema.findOneAndDelete({ token }).exec();
+        if (!user)
+            return responseHelper(res, 400, "Invalid token.")
+        const userObject = user.toObject();
+        delete userObject._id;
+        delete userObject.token;
+        await User.create(userObject).then(result => {
+                return res.redirect(301, 'https://www.google.com.vn/?hl=vi');
+                return responseHelper(res, 200, "success")
+            })
+            .catch(err => {
+                return responseHelper(res, 400, err.message)
+            });
+    }
     async login(data, res) {
         const { email, password } = data;
         let user = await User.findOne({ email }).exec();

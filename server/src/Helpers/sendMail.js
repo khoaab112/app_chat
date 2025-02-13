@@ -52,8 +52,8 @@ const mailConfirm = async(data) => {
     const emailHTML = fs.readFileSync(emailTemplatePath, 'utf-8');
     let { last_name, first_name, email, token } = data;
     let domain = NODE_ENV == 'development' ? `${URL_SERVER}:${PORT_SERVER}` : URL_SERVER;
-    let path_confirm = domain + "/confirm/" + token;
-    let path_block = domain + "/block/" + token;
+    let path_confirm = domain + "/api/auth/confirm/" + token;
+    let path_block = domain + "/api/auth/block/" + token;
     const obj = {
         APP_NAME,
         last_name,

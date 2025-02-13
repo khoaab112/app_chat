@@ -30,10 +30,10 @@ const UserPendingSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: 10 // 10800 s
+        expires: 10800 // 10800 s
     }
 });
 
-const UserPending = mongoose.model('UserPending', UserPendingSchema);
+const UserPending = mongoose.model('user_pending', UserPendingSchema);
 
 module.exports = UserPending;
