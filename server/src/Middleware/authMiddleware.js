@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const responseHelper = require('../Helpers/reponseHelper');
 const authRepository = require('../Repository/authRepository')
+const { getRedis } = require('../Helpers/redisHelper')
 
-const { key_cookie_refresh_token } = require('../../config/globalVar')
+const { key_cookie_refresh_token, blacklist_token } = require('../../config/globalVar')
 const { JWT_SECRET_ACCECSS, JWT_SECRET_REFRESH } = process.env;
 
 const checkToken = (token, secret) => {
@@ -39,7 +40,6 @@ exports.verifyToken = async(req, res, next) => {
         return responseHelper(res, 401, "");
     }
     token = token.split(" ")[1];
-
     let resultCheckAccess = await checkToken(token, JWT_SECRET_ACCECSS);
     if (resultCheckAccess.status == '-1') return responseHelper(res, 403, resultCheckAccess.msg);
     if (resultCheckAccess.status == '-2') {
@@ -51,6 +51,8 @@ exports.verifyToken = async(req, res, next) => {
         return responseHelper(res, 401, "reissue token", { access_token: result });
     }
     req.user = resultCheckAccess.msg;
+    let isBlackList = await getRedis(blacklist_token + resultCheckAccess.msg.id);
+    if (isBlackList) return responseHelper(res, 403, "Unauthorized key !");
     req.token = token;
     return next();
 };
