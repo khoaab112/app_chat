@@ -70,7 +70,15 @@ class UserRepository {
             return accessToken;
         }
         return null;
+    };
+    async logout(req, res) {
+        let user = req.user;
+        if (!user) return responseHelper(res, 404, "");
+        let removeToken = await User.findOneAndUpdate({ _id: user.id }, { refresh_token: "" });
+        if (!removeToken) return responseHelper(res, 403, "");
+        return responseHelper(res, 200, "Logout completed !");
     }
+
 }
 
 module.exports = new UserRepository();
