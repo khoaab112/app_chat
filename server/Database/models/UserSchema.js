@@ -45,8 +45,11 @@ const userSchema = new mongoose.Schema({
     refresh_token: {
         type: String,
     },
+    token_email: {
+        type: String,
+    }
 }, { timestamps: true });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('user', userSchema);
 
 module.exports = User;

@@ -1,13 +1,23 @@
 const authRepository = require('../Repository/authRepository')
 const register = async(req, res) => {
-    return authRepository.createUser(req.body, res);
+    return authRepository.register(req.body, res);
 };
-const login = async() => {};
-const logout = async() => {};
-const forgotPassword = async() => {};
+const confirmAccount = async(req, res) => {
+    return authRepository.createUser(req.params, res);
+}
+const login = async(req, res) => {
+    return authRepository.login(req.body, res);
+};
+const logout = async(req, res) => {
+    return authRepository.logout(req, res);
+};
+const forgotPassword = async(req, res) => {
+    return authRepository.forgotPassword(req.body, res);
+};
 
 module.exports = {
     register,
+    confirmAccount,
     login,
     logout,
     forgotPassword

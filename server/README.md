@@ -28,20 +28,10 @@
 │   ├── User.controller.js
 ├── helpers/
 │   ├── App.helper.js
-├── views/
-│   ├── layouts/
-│   ├── partials/
-│   ├── support/
-│   │   ├── index.ejs
-│   ├── documentation/
-│   │   ├── index.ejs
-│   ├── index.ejs
-│   ├── about.ejs
-│   ├── contact.ejs
-/public
+/storage
 ├── dist/
-├── images/
-│   ├── dashboard/
+├── logs/
+│   ├── logger.log
 │   ├── auth/
 │   ├── documentation/      
 ├── sitemap.xml
