@@ -47,7 +47,13 @@ const userSchema = new mongoose.Schema({
     },
     token_email: {
         type: String,
-    }
+    },
+    request_chat: {
+        type: [String],
+    },
+    groups: {
+        type: [String],
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('user', userSchema);
