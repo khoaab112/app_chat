@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema({
     },
     phone_number: {
         type: Number,
+        sparse: true,
         unique: [true, 'Phone number already exists'],
     },
     age: { type: Number, default: 1 },
@@ -49,6 +50,9 @@ const userSchema = new mongoose.Schema({
         type: String,
     },
     request_chat: {
+        type: [String],
+    },
+    friends: {
         type: [String],
     },
     groups: {

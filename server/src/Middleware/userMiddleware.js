@@ -36,4 +36,5 @@ const validateReset = [
         next();
     }
 ]
+
 module.exports = { validateRegister, validateLogin, validateReset };
