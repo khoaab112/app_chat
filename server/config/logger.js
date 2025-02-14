@@ -5,7 +5,7 @@ const { combine, timestamp, printf, colorize } = format;
 const logFormat = printf(({ level, message, timestamp }) => {
     return `[${timestamp}] ${level}: ${message}`;
 });
-const LOG_FILE_PATH = 'torage/logs/logger.log';
+const LOG_FILE_PATH = 'storage/logs/logger.log';
 
 const logger = createLogger({
     level: "error", // lever: info, warn, error, debug

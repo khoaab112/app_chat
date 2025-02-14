@@ -36,7 +36,7 @@ const checkToken = (token, secret) => {
 
 exports.verifyToken = async(req, res, next) => {
     let token = req.headers.authorization;
-    if (!tokend) {
+    if (!token) {
         return responseHelper(res, 401, "");
     }
     token = token.split("")[1];
