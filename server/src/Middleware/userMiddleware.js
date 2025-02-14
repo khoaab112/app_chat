@@ -26,4 +26,14 @@ const validateLogin = [
         next();
     }
 ]
-module.exports = { validateRegister, validateLogin };
+const validateReset = [
+    body('email').isEmail().withMessage('Please enter a valid mail!'),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return responseHelper(res, 400, errors.errors[0].msg);
+        }
+        next();
+    }
+]
+module.exports = { validateRegister, validateLogin, validateReset };

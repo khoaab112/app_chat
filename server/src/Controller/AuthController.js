@@ -11,7 +11,9 @@ const login = async(req, res) => {
 const logout = async(req, res) => {
     return authRepository.logout(req, res);
 };
-const forgotPassword = async() => {};
+const forgotPassword = async(req, res) => {
+    return authRepository.forgotPassword(req.body, res);
+};
 
 module.exports = {
     register,

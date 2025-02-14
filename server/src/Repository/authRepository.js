@@ -21,7 +21,7 @@ const {
 const User = require('../../Database/models/UserSchema');
 const UserPendingSchema = require('../../Database/models/UserPendingSchema');
 const responseHelper = require('../Helpers/reponseHelper');
-const { mailConfirm } = require('../Helpers/sendMail')
+const { mailConfirm, mailResetPassword } = require('../Helpers/sendMail')
 
 class UserRepository {
     async register(data, res) {
@@ -36,7 +36,7 @@ class UserRepository {
         data.password = hash;
         data.token = token;
         await UserPendingSchema.create(data).then(async result => {
-                console.log(await mailConfirm(data));
+                await mailConfirm(data)
                 return responseHelper(res, 200, "success ! check email")
             })
             .catch(err => {
@@ -118,7 +118,19 @@ class UserRepository {
         await setRedisForType(blacklist_token + user.id, req.token, 'string', expires_access_token_second);
         return responseHelper(res, 200, "Logout completed !");
     }
-
+    async forgotPassword(data, res) {
+        let email = data.email;
+        let token = jwt.sign({ email },
+            JWT_SECRET_MAIL, { algorithm: ALGORITHM_JWT, expiresIn: EXPIRES_ACCECSS_TOKEN }
+        );
+        token = { token_email: token };
+        let checkUser = await User.findOneAndUpdate({ email }, token).exec();
+        if (!checkUser) return responseHelper(res, 403, "email does not exist!");
+        data.token = token.token_email;
+        data.email = email;
+        await mailResetPassword(data)
+        return responseHelper(res, 200, "success ! check email")
+    }
 }
 
 module.exports = new UserRepository();

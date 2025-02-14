@@ -13,7 +13,8 @@ const {
     PORT_SERVER
 } = process.env;
 const {
-    FILE_HTML_AUTHENTICATION_CODE
+    FILE_HTML_AUTHENTICATION_CODE,
+    FILE_HTML_RESET_PASSWORD
 } = require('../../config/globalVar')
 
 const transporter = nodemailer.createTransport({
@@ -77,9 +78,37 @@ const mailConfirm = async(data) => {
             return info;
         }
     });
+};
+const mailResetPassword = async(data) => {
+    const emailTemplatePath = path.join(__dirname, pathTemplateHTML, FILE_HTML_RESET_PASSWORD);
+    const emailHTML = fs.readFileSync(emailTemplatePath, 'utf-8');
+    let { token, email } = data;
+    let domain = NODE_ENV == 'development' ? `${URL_SERVER}:${PORT_SERVER}` : URL_SERVER;
+    let path_reset = domain + "/api/auth/reset/" + token;
+    let path_block = domain + "/api/auth/block/" + token;
+    const obj = {
+        token,
+        path_reset,
+        path_block
+    };
+    const renderedHTML = mustache.render(emailHTML, obj);
+    const mailOptions = {
+        from: MAIL_USERNAME,
+        to: email,
+        subject: "Thay đổi mật khẩu",
+        html: renderedHTML
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return error;
+        } else {
+            return info;
+        }
+    });
 }
 
 module.exports = {
     send,
-    mailConfirm
+    mailConfirm,
+    mailResetPassword
 };
