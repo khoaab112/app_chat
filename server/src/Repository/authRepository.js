@@ -1,6 +1,6 @@
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
-const { setRedisForType } = require('./../Helpers/redisHelper');
+const { setRedisForType, getRedis } = require('./../Helpers/redisHelper');
 
 const {
     blacklist_token,
@@ -9,6 +9,8 @@ const {
     key_cookie_refresh_token,
     EXPIRES_ACCECSS_TOKEN,
     EXPIRES_REFRESH_TOKEN,
+    key_redis_send_mail,
+    time_mail
 } = require('./../../config/globalVar');
 
 const {
@@ -120,6 +122,10 @@ class UserRepository {
     }
     async forgotPassword(data, res) {
         let email = data.email;
+        let checkSpam = await getRedis(key_redis_send_mail + email, true);
+        if (checkSpam.value) {
+            return responseHelper(res, 400, `Please check your email. The next send will be available in ${Math.round(checkSpam.ttl / 60)} minutes.`)
+        }
         let token = jwt.sign({ email },
             JWT_SECRET_MAIL, { algorithm: ALGORITHM_JWT, expiresIn: EXPIRES_ACCECSS_TOKEN }
         );
@@ -128,7 +134,8 @@ class UserRepository {
         if (!checkUser) return responseHelper(res, 403, "email does not exist!");
         data.token = token.token_email;
         data.email = email;
-        await mailResetPassword(data)
+        await mailResetPassword(data);
+        await setRedisForType(key_redis_send_mail + email, token, 'string', time_mail);
         return responseHelper(res, 200, "success ! check email")
     }
 }

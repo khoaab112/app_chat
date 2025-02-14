@@ -51,7 +51,7 @@ exports.verifyToken = async(req, res, next) => {
         return responseHelper(res, 401, "reissue token", { access_token: result });
     }
     req.user = resultCheckAccess.msg;
-    let isBlackList = await getRedis(blacklist_token + resultCheckAccess.msg.id);
+    let isBlackList = (await getRedis(blacklist_token + resultCheckAccess.msg.id)).value;
     if (isBlackList) return responseHelper(res, 403, "Unauthorized key !");
     req.token = token;
     return next();

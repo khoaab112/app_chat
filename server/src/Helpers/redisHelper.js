@@ -1,7 +1,10 @@
 const client = require("./../../config/redis");
 
-async function getRedis(key) {
-    return await client.get(key);
+async function getRedis(key, isTime) {
+    let value = await client.get(key);
+    if (!isTime) return { value };
+    let ttl = await client.ttl(key);
+    return { value, ttl };
 };
 const setRedisForType = async(key, data, type, exp = null) => {
     let string = type === 'str' ? data : JSON.stringify(data);
