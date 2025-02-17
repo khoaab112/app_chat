@@ -58,6 +58,9 @@ const userSchema = new mongoose.Schema({
     groups: {
         type: [String],
     },
+    friends: {
+        type: [String],
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('user', userSchema);

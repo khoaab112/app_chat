@@ -11,8 +11,12 @@ const addFriend = async(req, res) => {
 const removeFriend = async(req, res) => {
     return userRepository.removeFriend(req, res);
 }
+const confirmFriend = async(req, res) => {
+    return userRepository.confirmFriend(req, res);
+}
 module.exports = {
     findUserByMailOrKey,
     addFriend,
-    removeFriend
+    removeFriend,
+    confirmFriend
 }
