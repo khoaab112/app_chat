@@ -67,6 +67,17 @@ class UserRepository {
         );
         if (!updatedUser) return responseHelper(res, 500, "Failed to add friend!");
         return responseHelper(res, 200, "Friend added successfully");
+    };
+    async unFriend(req, res) {
+        const { id } = req.body;
+        let main = req.user;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return responseHelper(res, 400, "Invalid ID format!");
+        };
+        let checkUser = await User.findByIdAndUpdate(
+            main.id, { $pull: { friends: id } }, { new: true, runValidators: true }
+        );
+        return responseHelper(res, 200, "unfriend success!");
     }
 
 }
