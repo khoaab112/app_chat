@@ -68,7 +68,7 @@ class UserRepository {
         if (!user) return responseHelper(res, 403, "Invalid information !");
         if (!user.is_active) return responseHelper(res, 403, "Account disabled !");
         const isPasswordValid = await argon2.verify(user.password, password);
-        if (!isPasswordValid) return responseHelper(res, 403, "Invalid information!");
+        if (!isPasswordValid) return responseHelper(res, 403, "Invalid account or password !");
 
         const generateTokens = (user) => ({
             access_token: jwt.sign({

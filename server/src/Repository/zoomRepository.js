@@ -47,6 +47,13 @@ class ZoomRepository {
             is_group: true,
         }
     }
+    async createZoom(req, res) {
+        let { users } = req.body;
+        let name = "null";
+        let describe = "null";
+        let avartar = "null";
+
+    }
 
 }
 
