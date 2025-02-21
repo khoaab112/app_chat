@@ -15,13 +15,13 @@ const zoomSchema = new mongoose.Schema({
         type: [String],
     },
     admin_user: {
-        type: [String],
+        type: Object,
     },
     blockUsers: {
         type: [String],
     },
     creator: {
-        type: String,
+        type: Object,
     },
     is_active: {
         type: Boolean,
