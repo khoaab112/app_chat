@@ -9,7 +9,7 @@ class UserRepository {
         const users = await User.find({
             $and: [
                 { is_active: true },
-                { _id: { $ne: new mongoose.Types.ObjectId(req.user.id) } },
+                { _id: { $ne: new mongoose.Types.ObjectId.createFromHexString(req.user.id) } },
                 {
                     $or: [
                         { email: { $regex: key, $options: "i" } },

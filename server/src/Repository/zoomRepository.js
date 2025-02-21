@@ -18,7 +18,7 @@ class ZoomRepository {
         const foundDocuments = await User.find({
             $and: [
                 { $or: arrUser, },
-                { _id: { $ne: new mongoose.Types.ObjectId(main.id) } },
+                { _id: { $ne: new mongoose.Types.ObjectId.createFromHexString(main.id) } },
                 { is_active: true },
             ]
         }).lean();
