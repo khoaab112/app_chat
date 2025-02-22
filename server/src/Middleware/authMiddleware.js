@@ -39,7 +39,7 @@ exports.verifyToken = async(req, res, next) => {
     if (!token) {
         return responseHelper(res, 401, "");
     }
-    token = token.split("")[1];
+    token = token.split(" ")[1];
     let resultCheckAccess = await checkToken(token, JWT_SECRET_ACCECSS);
     if (resultCheckAccess.status == '-1') return responseHelper(res, 403, resultCheckAccess.msg);
     if (resultCheckAccess.status == '-2') {

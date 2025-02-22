@@ -1,5 +1,10 @@
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
+const User = require('../../Database/models/UserSchema');
+const UserPendingSchema = require('../../Database/models/UserPendingSchema');
+const responseHelper = require('../Helpers/reponseHelper');
+
+const { mailConfirm, mailResetPassword } = require('../Helpers/sendMail')
 const { setRedisForType, getRedis } = require('./../Helpers/redisHelper');
 
 const {
@@ -20,10 +25,6 @@ const {
     JWT_SECRET_MAIL,
 } = process.env;
 
-const User = require('../../Database/models/UserSchema');
-const UserPendingSchema = require('../../Database/models/UserPendingSchema');
-const responseHelper = require('../Helpers/reponseHelper');
-const { mailConfirm, mailResetPassword } = require('../Helpers/sendMail')
 
 class UserRepository {
     async register(data, res) {
@@ -67,7 +68,7 @@ class UserRepository {
         if (!user) return responseHelper(res, 403, "Invalid information !");
         if (!user.is_active) return responseHelper(res, 403, "Account disabled !");
         const isPasswordValid = await argon2.verify(user.password, password);
-        if (!isPasswordValid) return responseHelper(res, 403, "Invalid information!");
+        if (!isPasswordValid) return responseHelper(res, 403, "Invalid account or password !");
 
         const generateTokens = (user) => ({
             access_token: jwt.sign({

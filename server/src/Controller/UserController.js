@@ -1,34 +1,27 @@
-// src/controllers/userController.js
-const userService = require('../services/userService');
+const userRepository = require('../Repository/userRepository')
 
-class UserController {
-    async getUsers(req, res) {
-        try {
-            const users = await userService.getAllUsers();
-            res.json(users);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    }
 
-    async getUser(req, res) {
-        try {
-            const user = await userService.getUserById(req.params.id);
-            res.json(user);
-        } catch (error) {
-            res.status(404).json({ error: error.message });
-        }
-    }
+const findUserByMailOrKey = async(req, res) => {
+    return userRepository.findUser(req, res);
+};
 
-    async createUser(req, res) {
-        try {
-            const { name, email } = req.body;
-            const newUser = await userService.createUser(name, email);
-            res.status(201).json(newUser);
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
-    }
+const addFriend = async(req, res) => {
+    return userRepository.addFriend(req, res);
+}
+const removeFriend = async(req, res) => {
+    return userRepository.removeFriend(req, res);
+}
+const confirmFriend = async(req, res) => {
+    return userRepository.confirmFriend(req, res);
 }
 
-module.exports = new UserController();
+const unfriend = async(req, res) => {
+    return userRepository.unFriend(req, res);
+}
+module.exports = {
+    findUserByMailOrKey,
+    addFriend,
+    removeFriend,
+    confirmFriend,
+    unfriend
+}
